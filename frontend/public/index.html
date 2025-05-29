@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FreezeMotions</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            margin: 0; 
+            background: #1a1a1a; 
+            color: white; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .header { 
+            text-align: center; 
+            padding: 40px 0; 
+        }
+        .title { 
+            font-size: 3rem; 
+            font-weight: bold; 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin: 0; 
+        }
+        .subtitle { 
+            font-size: 1.2rem; 
+            opacity: 0.8; 
+            margin: 10px 0; 
+        }
+        .features { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            margin: 40px 0; 
+        }
+        .card { 
+            background: #2a2a2a; 
+            padding: 30px; 
+            border-radius: 10px; 
+            text-align: center; 
+        }
+        .icon { 
+            font-size: 3rem; 
+            margin-bottom: 15px; 
+        }
+        .card h3 { 
+            font-size: 1.3rem; 
+            margin: 15px 0; 
+        }
+        .card p { 
+            opacity: 0.8; 
+            line-height: 1.6; 
+        }
+        .status { 
+            background: #059669; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 20px 0; 
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">FreezeMotions</h1>
+            <p class="subtitle">Professional Self-Hosted Photo Platform</p>
+            <div class="status">🚀 System erfolgreich gestartet!</div>
+        </div>
+        
+        <div class="features">
+            <div class="card">
+                <div class="icon">📸</div>
+                <h3>Fotoverwaltung</h3>
+                <p>Professionelle Alben-Verwaltung im Flickr-Stil mit modernem Dark Mode Interface.</p>
+            </div>
+            
+            <div class="card">
+                <div class="icon">🔒</div>
+                <h3>DSGVO-Konform</h3>
+                <p>Selbstgehostetes Matomo Analytics für maximalen Datenschutz ohne externe Tracker.</p>
+            </div>
+            
+            <div class="card">
+                <div class="icon">📁</div>
+                <h3>FTP-Upload</h3>
+                <p>Direkte Kamera-Uploads via FTP für professionelle Sport- und Event-Fotografen.</p>
+            </div>
+            
+            <div class="card">
+                <div class="icon">⚡</div>
+                <h3>Docker-Ready</h3>
+                <p>Vollständige Containerisierung mit One-Click-Installation für alle Plattformen.</p>
+            </div>
+            
+            <div class="card">
+                <div class="icon">📧</div>
+                <h3>E-Mail-System</h3>
+                <p>Automatische Benachrichtigungen bei Uploads und Benutzer-Registrierungen.</p>
+            </div>
+            
+            <div class="card">
+                <div class="icon">🛡️</div>
+                <h3>SSL/TLS</h3>
+                <p>Let's Encrypt Integration für sichere HTTPS-Verbindungen in der Produktion.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 40px 0; opacity: 0.6;">
+            <p>🎯 <strong>Services verfügbar:</strong></p>
+            <p>Backend API: <a href="http://localhost:3001/health" style="color: #3b82f6;">http://localhost:3001/health</a></p>
+            <p>Matomo Analytics: <a href="http://localhost:8080" style="color: #3b82f6;">http://localhost:8080</a></p>
+            <p>MySQL Database: localhost:3306</p>
+        </div>
+    </div>
+    
+    <div id="root"></div>
+</body>
+</html>

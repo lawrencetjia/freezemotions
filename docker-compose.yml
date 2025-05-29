@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_NAME=freezemotions
+      - DB_USER=freezemotions
+      - DB_PASSWORD=password123
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=freezemotions
+      - MYSQL_USER=freezemotions
+      - MYSQL_PASSWORD=password123
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  matomo:
+    image: matomo:4
+    ports:
+      - "8080:80"
+    depends_on:
+      - matomo-db
+
+  matomo-db:
+    image: mariadb:10
+    environment:
+      - MYSQL_ROOT_PASSWORD=matomoroot
+      - MYSQL_DATABASE=matomo
+      - MYSQL_USER=matomo
+      - MYSQL_PASSWORD=matomopass
+
+volumes:
+  mysql_data:
