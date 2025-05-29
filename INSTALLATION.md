@@ -1,36 +1,35 @@
 # FreezeMotions Installation Guide
 
-## 🚀 Schnell-Installation (Empfohlen)
+## 🚀 Automatische Installation
 
+### Schnell-Installation
 ```bash
-# Direkt auf Ubuntu/Debian-Server:
-curl -sSL https://raw.githubusercontent.com/lawrencetjia/freezemotions/main/server-install.sh | sudo bash
-
-📋 Manuelle Installation
-1. Repository klonen
+curl -sSL https://raw.githubusercontent.com/lawrencetjia/freezemotions/main/install-freezemotions.sh | sudo bash
+Manuelle Installation
 bashgit clone https://github.com/lawrencetjia/freezemotions.git
 cd freezemotions
-2. Server-Installation starten
-bashchmod +x server-install.sh
-sudo ./server-install.sh
-3. DNS-Einträge setzen (VORHER!)
-A-Record: ihre-domain.de → Server-IP
-A-Record: www.ihre-domain.de → Server-IP  
-A-Record: analytics.ihre-domain.de → Server-IP
-🔧 Lokale Entwicklung
-bash# Dependencies installieren
-./scripts/setup-dev.sh
+chmod +x install-freezemotions.sh
+sudo ./install-freezemotions.sh
+📋 Voraussetzungen
 
-# Mit Docker
-docker-compose up -d
+Ubuntu 20.04+ oder Debian 11+
+Mindestens 2GB RAM
+Root-Zugriff
+Domain mit DNS-Einträgen (für Produktion)
 
-# Services verfügbar unter:
-# - Frontend: http://localhost:3000
-# - Backend: http://localhost:3001
-# - Matomo: http://localhost:8080
+🌐 Nach der Installation
+
+Frontend: https://ihre-domain.de
+Backend: https://ihre-domain.de/health
+Analytics: https://analytics.ihre-domain.de
+FTP: ftp://ihre-domain.de:21
+
+🛠️ Wartung
+bashcd /opt/freezemotions
+docker-compose ps          # Status
+docker-compose logs        # Logs
+docker-compose restart     # Neustart
 📞 Support
-Bei Problemen:
 
-Logs prüfen: docker-compose logs [service]
 GitHub Issues: https://github.com/lawrencetjia/freezemotions/issues
-E-Mail: support@freezemotions.com
+E-Mail: info@freezemotions.com

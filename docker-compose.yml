@@ -1,55 +1,125 @@
-version: '3.8'
+version: '3.3'
 
 services:
   frontend:
     build: ./frontend
+    container_name: freezemotions_frontend
     ports:
       - "3000:3000"
-    depends_on:
-      - backend
     environment:
       - REACT_APP_API_URL=http://localhost:3001
+      - REACT_APP_MATOMO_URL=${MATOMO_URL:-http://localhost:8081}
+      - REACT_APP_MATOMO_SITE_ID=${MATOMO_SITE_ID:-1}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
 
   backend:
     build: ./backend
+    container_name: freezemotions_backend
     ports:
       - "3001:3001"
     environment:
-      - NODE_ENV=development
-      - DB_HOST=mysql
-      - DB_NAME=freezemotions
-      - DB_USER=freezemotions
-      - DB_PASSWORD=password123
+      - NODE_ENV=${NODE_ENV:-production}
+      - DB_HOST=${DB_HOST:-mysql}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_NAME=${DB_NAME:-freezemotions}
+      - DB_USER=${DB_USER:-freezemotions}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_FROM=${SMTP_FROM}
+      - JWT_SECRET=${JWT_SECRET}
+      - SESSION_SECRET=${SESSION_SECRET}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./storage:/mnt/storage
     depends_on:
       - mysql
+      - redis
+    restart: unless-stopped
 
   mysql:
     image: mysql:8.0
-    ports:
-      - "3306:3306"
+    container_name: freezemotions_mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpass
-      - MYSQL_DATABASE=freezemotions
-      - MYSQL_USER=freezemotions
-      - MYSQL_PASSWORD=password123
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME:-freezemotions}
+      - MYSQL_USER=${DB_USER:-freezemotions}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    container_name: freezemotions_redis
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  ftp:
+    image: fauria/vsftpd
+    container_name: freezemotions_ftp
+    environment:
+      - FTP_USER=${FTP_USER:-photographer}
+      - FTP_PASS=${FTP_PASS}
+      - PASV_ADDRESS=${DOMAIN:-localhost}
+      - PASV_MIN_PORT=21100
+      - PASV_MAX_PORT=21110
+    volumes:
+      - ./storage/ftp:/home/vsftpd/${FTP_USER:-photographer}
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+    restart: unless-stopped
 
   matomo:
     image: matomo:4
+    container_name: freezemotions_matomo
+    environment:
+      - MATOMO_DATABASE_HOST=matomo-db
+      - MATOMO_DATABASE_ADAPTER=mysql
+      - MATOMO_DATABASE_TABLES_PREFIX=matomo_
+      - MATOMO_DATABASE_USERNAME=matomo
+      - MATOMO_DATABASE_PASSWORD=${MATOMO_DB_PASSWORD}
+      - MATOMO_DATABASE_DBNAME=matomo
+    volumes:
+      - matomo_data:/var/www/html
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - matomo-db
+    restart: unless-stopped
 
   matomo-db:
     image: mariadb:10
+    container_name: freezemotions_matomo_db
     environment:
-      - MYSQL_ROOT_PASSWORD=matomoroot
+      - MYSQL_ROOT_PASSWORD=${MATOMO_DB_ROOT_PASSWORD}
       - MYSQL_DATABASE=matomo
       - MYSQL_USER=matomo
-      - MYSQL_PASSWORD=matomopass
+      - MYSQL_PASSWORD=${MATOMO_DB_PASSWORD}
+    volumes:
+      - matomo_db_data:/var/lib/mysql
+    restart: unless-stopped
 
 volumes:
   mysql_data:
+    driver: local
+  matomo_data:
+    driver: local
+  matomo_db_data:
+    driver: local
+  redis_data:
+    driver: local
